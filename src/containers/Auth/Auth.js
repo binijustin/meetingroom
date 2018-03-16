@@ -1,31 +1,6 @@
 import React, { Component } from 'react';
-import Aux from '../../hoc/Auxiliary/Auxiliary';
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import IconButton from 'material-ui/IconButton';
-import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import Visibility from 'material-ui-icons/Visibility';
-import VisibilityOff from 'material-ui-icons/VisibilityOff';
-import './Auth.css'
-import TextField from 'material-ui/TextField';
-import Button from 'material-ui/Button';
-import jss from './Auth-jss';
-// const styles = theme => ({
-//     root: {
-//         display: 'flex',
-//         justifyContent: 'center',
-//         alignIitems: 'center',
-//         background: '#eeeeee',
-//         height: '100vh',
-//     },
-
-// });
-
-const styles = {
-    ...jss
-};
+import { connect } from 'react-redux';
+import * as actionTypes from '../../store/actions/actionTypes';
 
 class Auth extends Component {
     state = {
@@ -39,63 +14,80 @@ class Auth extends Component {
                 value: '',
                 valid: false,
                 touched: false
-            }
-        }
+            },
+            userName: {
+                value: '',
+                valid: false,
+                touched: false
+            },
+            fullName: {
+                value: '',
+                valid: false,
+                touched: false
+            },
+        },
+
     }
 
- 
+    inputChangedHandler = (event, identifier) => {
+        const controlForm = {
+            ...this.state.controls
+        }//get the keys shallow copy
+        const updateFromElement = { ...controlForm[identifier] };
+        updateFromElement.value = event.target.value;
+        updateFromElement.touched = true;
+        controlForm[identifier] = updateFromElement; // put the updated copy 
+
+        // let formIsValid = true;
+        // for (let inputIdentifier in updatedOrderForm) {
+        //     formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
+        // }
+
+        this.setState({ controls: controlForm }); //set state
+    }
+
+    onSubmit = (event) => {
+        event.preventDefault();
+        console.log(this.state);
+        this.props.onAuth(this.state.controls.userName.value, this.state.controls.fullName.value);
+        // localStorage.setItem('myData', 'qqq');
+        // localStorage.setItem ('fullname', 'www');
+
+    }
 
     render() {
-        const { classes } = this.props;
-        console.log(classes.root);
+
         return (
 
-            <div className={classes.root}>
-                <h2 className="text-center">Meeting Room Solution </h2>
-                <form >
-                    <TextField
-                        id="email"
-                        label="Email"
-                        type="email"
-                        className={classes.formControl}
-                        fullWidth
-                        margin="normal"
-                    />
-
-                    <TextField
-                        id="password"
-                        label="Password"
-                        type="password"
-                        className={classes.textField}
-                        fullWidth
-                        margin="normal"
-                    />
-
-                    <Button variant="raised">
-                    Sign in
-                   </Button>
-                   
-                </form>
-                <div className="row">
-                    <div className="col">
-                        <p className="text-primary pointer">View Meeting Rooms</p>
-                    </div>
-                    <div className="col-4">
-                        <p className="text-primary pointer">Register</p>
-                    </div>
-                </div>
-
-
-            </div >
-
+            <form onSubmit={this.onSubmit}>
+                {this.props.fullName}
+                <input type="text"
+                    onChange={(event) => this.inputChangedHandler(event, 'userName')}
+                    value={this.state.userName} />
+                <input type="text"
+                    onChange={(event) => this.inputChangedHandler(event, 'fullName')}
+                    value={this.state.fullName} />
+                <input type="submit" value="submit" />
+            </form>
 
 
         );
     };
 }
 
-Auth.propTypes = {
-    classes: PropTypes.object.isRequired,
+//configuration which kind of infomation we need
+const mapStateToProps = state => {
+    return {
+        token: state.auth.token,
+        userName: state.auth.username,
+        fullName: state.auth.fullname
+    };
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onAuth: (un, fn) => dispatch({ type: actionTypes.AUTH_START, userName: un, fullName: fn })
+    };
 };
 
-export default withStyles(styles)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);

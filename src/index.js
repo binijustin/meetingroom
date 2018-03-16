@@ -3,13 +3,17 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { createStore, combineReducers } from 'redux';
+import authReducer from './store/reducers/auth';
 
-const app = (
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>
-)
+const rootReducer = combineReducers({
+    auth: authReducer
+})
 
-ReactDOM.render(app, document.getElementById('root'));
+const store = createStore(rootReducer);
+
+
+
+ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
 registerServiceWorker();
