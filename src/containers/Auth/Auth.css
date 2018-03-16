@@ -1,19 +1,10 @@
-
-.fullscreen {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    background:white;
-    height: 100vh;
-  }
-
-  .form-wrapper{
-    border: 1px black solid;
-    border-radius: 5%;
-    width: 330px;
-    padding: 15px;
-    margin: 0 auto;
+ .authContainer{
+      margin: 20px auto;
+      width: 40%;
+      text-align: center;
+      box-shadow: 0 2px 3px #ccc;
+      border: 1px solid #eee;
+      padding: 10px;
+      box-sizing: border-box;
     }
 
-  

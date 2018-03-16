@@ -10,26 +10,22 @@ import Visibility from 'material-ui-icons/Visibility';
 import VisibilityOff from 'material-ui-icons/VisibilityOff';
 import './Auth.css'
 import TextField from 'material-ui/TextField';
+import Button from 'material-ui/Button';
+import jss from './Auth-jss';
+// const styles = theme => ({
+//     root: {
+//         display: 'flex',
+//         justifyContent: 'center',
+//         alignIitems: 'center',
+//         background: '#eeeeee',
+//         height: '100vh',
+//     },
 
-const styles = theme => ({
-    root: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignIitems: 'center',
-        background: '#eeeeee',
-        height: '100vh',
-    },
-    formControl: {
-        margin: theme.spacing.unit,
-    },
-    withoutLabel: {
-        marginTop: theme.spacing.unit * 3,
-    },
-    textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-      },
-});
+// });
+
+const styles = {
+    ...jss
+};
 
 class Auth extends Component {
     state = {
@@ -47,46 +43,49 @@ class Auth extends Component {
         }
     }
 
+ 
 
     render() {
         const { classes } = this.props;
+        console.log(classes.root);
         return (
 
-            <div className="fullscreen">
-                <div className="form-wrapper">
-                    <h2 className="text-center">Meeting Room Solution </h2>
-                    <form>
-                        <TextField
-                            id="email"
-                            label="Email"
-                            type="email"
-                            className={classes.formControl}
-                            fullWidth
-                            
-                            margin="normal"
-                        />
+            <div className={classes.root}>
+                <h2 className="text-center">Meeting Room Solution </h2>
+                <form >
+                    <TextField
+                        id="email"
+                        label="Email"
+                        type="email"
+                        className={classes.formControl}
+                        fullWidth
+                        margin="normal"
+                    />
 
-                          <TextField
-                            id="password"
-                            label="Password"
-                            type="password"
-                            className={classes.textField}
-                            margin="normal"
-                        />
+                    <TextField
+                        id="password"
+                        label="Password"
+                        type="password"
+                        className={classes.textField}
+                        fullWidth
+                        margin="normal"
+                    />
 
-                       
-                        <button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-                    </form>
-                    <div className="row">
-                        <div className="col">
-                            <p className="text-primary pointer">View Meeting Rooms</p>
-                        </div>
-                        <div className="col-4">
-                            <p className="text-primary pointer">Register</p>
-                        </div>
+                    <Button variant="raised">
+                    Sign in
+                   </Button>
+                   
+                </form>
+                <div className="row">
+                    <div className="col">
+                        <p className="text-primary pointer">View Meeting Rooms</p>
                     </div>
-
+                    <div className="col-4">
+                        <p className="text-primary pointer">Register</p>
+                    </div>
                 </div>
+
+
             </div >
 
 
