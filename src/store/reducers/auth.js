@@ -4,6 +4,7 @@ const initialState = {
     token: null,
     username: null,
     fullname: null,
+    password: null,
 }
 
 const reducer = (state = initialState, action) => {
@@ -14,7 +15,7 @@ const reducer = (state = initialState, action) => {
         return {
             ...initialState,
             username: action.userName,
-            fullname: action.fullName
+            password: action.password
         }
         
     }

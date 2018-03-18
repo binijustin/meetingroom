@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as actionTypes from '../../store/actions/actionTypes';
+import * as actionCreators from '../../store/actions/actionTypes';
+//import {authStart}  from '../../store/actions/actionTypes'; 
 
 class Auth extends Component {
     state = {
@@ -49,7 +50,7 @@ class Auth extends Component {
     onSubmit = (event) => {
         event.preventDefault();
         console.log(this.state);
-        this.props.onAuth(this.state.controls.userName.value, this.state.controls.fullName.value);
+        this.props.onAuth(this.state.controls.userName.value, this.state.controls.password.value);
         // localStorage.setItem('myData', 'qqq');
         // localStorage.setItem ('fullname', 'www');
 
@@ -60,13 +61,13 @@ class Auth extends Component {
         return (
 
             <form onSubmit={this.onSubmit}>
-                {this.props.fullName}
+                {this.props.password}
                 <input type="text"
                     onChange={(event) => this.inputChangedHandler(event, 'userName')}
                     value={this.state.userName} />
                 <input type="text"
-                    onChange={(event) => this.inputChangedHandler(event, 'fullName')}
-                    value={this.state.fullName} />
+                    onChange={(event) => this.inputChangedHandler(event, 'password')}
+                    value={this.state.password} />
                 <input type="submit" value="submit" />
             </form>
 
@@ -80,14 +81,15 @@ const mapStateToProps = state => {
     return {
         token: state.auth.token,
         userName: state.auth.username,
-        fullName: state.auth.fullname
+        password: state.auth.password
     };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onAuth: (un, fn) => dispatch({ type: actionTypes.AUTH_START, userName: un, fullName: fn })
+        onAuth: (un, pass) => dispatch(actionCreators.authStart(un,pass))
     };
+    
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Auth);
