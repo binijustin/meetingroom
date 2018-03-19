@@ -1,36 +1,25 @@
 import * as actionTypes from '../actions/actionTypes';
-
+import { updateObject } from '../utility';
 const initialState = {
     userInvitations: [],
     userInvites: [],
     userEvents: [],
 }
 
-const reducer = (state = initialState, action) => {
-
+//create the logic manipulation here
+const filteredEvents = (state, action) => {
+    const updatedArray = state.userEvents.filter(result => {
+        //logic for filtering
+        return true
+    })
     
-    if (action.type === actionTypes.GET_EVENTS) {
-        //Api call
-        console.log(action);
-        return {
-            ...initialState,
-            username: action.userName,
-            fullname: action.fullName
-        }
-        
-    }
+    return updateObject(state, {userEvents : updatedArray})
+}
 
+const reducer = (state = initialState, action) => {
     if (action.type === actionTypes.GET_EVENTS) {
-        //Api call
-        console.log(action);
-        return {
-            ...initialState,
-            username: action.userName,
-            fullname: action.fullName
-        }
-        
+        return filteredEvents(state, action)
     }
-
     return state;
 }
 

@@ -4,7 +4,7 @@ import classes from './MeetingRoom.css';
 class MeetingRoom extends Component {
     render(){
         return(
-            <h1> We In </h1>
+            <h1 className={classes.MeetingRoom}> We In </h1>
         )
     }
 }

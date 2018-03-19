@@ -1,0 +1,10 @@
+.Login{
+    display: flex;
+    justify-content: center;
+    margin: 20px auto;
+    border: 1px solid #eee;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 40%;
+}
+
