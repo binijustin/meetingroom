@@ -1,13 +1,21 @@
 import * as actionTypes from './actionTypes';
-import unauth from '../../axios/unauth';
-import forauth from '../../axios/forauth';
-import axios from 'axios';
+// import unauth from '../../axios/unauth';
+// import forauth from '../../axios/forauth';
+// import axios from 'axios';
+import http from '../../axios/unauth';
 
 
-export const authSucces = (authData) => {
+export const authStart = (username) => {
+    return {
+        type: actionTypes.AUTH_START,
+        username: username
+    }
+}
+
+export const authSucces = (token) => {
     return {
         type: actionTypes.AUTH_SUCCESS,
-        authData: authData
+        token: token
     }
 }
 
@@ -25,7 +33,6 @@ export const login = (obj) => {
     console.log(obj)
     return {
         type: actionTypes.AUTH_LOGIN,
-        username: obj.username,
         firstname: obj.firstname,
         lastname: obj.lastname,
         middlename: obj.middlename,
@@ -40,32 +47,32 @@ export const login = (obj) => {
 
 export const loginUser = (un, pass) => { //simulate async calls
     return dispatch => {
-        console.log(un, pass);
-        unauth.post('access/LoginUser', {
+        const request = http('');
+        dispatch(authStart(un))
+        request.post('access/LoginUser', {
 
             loginname: un,
             password: pass,
             syscode: "MRS"
         })
             .then(response => {
-                console.log(response);
+                const request = http(response.data.stringParam1);
+                console.log(response)
                 const details = response.data.objParam1;
-                // dispatch(login(details));
-                localStorage.setItem('stringParam', response.data.stringParam1)
-                const headers = {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Basic ' + response.data.stringParam1
+                if (response.data.status === 'SUCCESS') {
+                    dispatch(login(details))
+                    return request.get('authenticate/start')
+                        .then(response => {
+                            console.log('verify', response);
+                            dispatch(authSucces(response.headers.token))
+                        });
                 }
-                // return unauth.get('authenticate/start', {
-                //     headers: headers
-                // });
-                 return forauth.get('authenticate/start');
-            })
-            .then(response => {
-                console.log('verify', response);
+                else if (response.data.status === 'FAILURE') {
+                    dispatch(authFail({ message: response.data.message }));
+                }
             })
             .catch(error => {
-                console.log(error)
+                console.log('error', error)
                 dispatch(authFail(error));
             });
     }

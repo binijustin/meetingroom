@@ -1,5 +1,4 @@
 export {
-    authStart,
     loginUser,
 }
 from './auth';

@@ -4,6 +4,9 @@ import * as actionCreators from '../../store/actions/index';
 //import {authStart}  from '../../store/actions/actionTypes'; 
 import Login from '../../components/Login/Login';
 import Aux from '../../hoc/Auxiliary/Auxiliary';
+
+import { Redirect } from 'react-router-dom';
+
 class Auth extends Component {
     state = {
         controls: {
@@ -44,14 +47,36 @@ class Auth extends Component {
     }
 
     render() {
+        let view = (
+            <Login
+                submit={this.onSubmit}
+                changed={this.inputChangedHandler}
+                username={this.state.controls.username.value}
+                password={this.state.controls.password.value}
+            />
+        )
+
+        if (this.props.loading) {
+            view = (<p>loading</p>)
+        }
+
+        let errorMessage = null;
+        if (this.props.error) {
+            errorMessage = (
+                <p>{this.props.error.message}</p>
+            );
+        }
+
+        let authRedirect = null;
+        if (this.props.isAuthenticated) {
+            authRedirect = <Redirect to={this.props.authRedirectPath} />
+        }
 
         return (
             <Aux>
-                {this.props.username}
-                <Login
-                    submit={this.onSubmit}
-                    changed={this.inputChangedHandler}
-                />
+                {authRedirect}
+                {errorMessage}
+                {view}
             </Aux>
         );
     };
@@ -62,6 +87,10 @@ const mapStateToProps = state => {
     return {
         token: state.auth.token,
         username: state.auth.username,
+        isAuthenticated: state.auth.token !== null,
+        error: state.auth.error,
+        authRedirectPath: state.auth.authRedirectPath,
+        loading: state.auth.loading
     };
 }
 

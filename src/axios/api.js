@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as globals from '../globals';
 
 const instance = axios.create({
-    baseURL: globals.server,
+    baseURL: globals.api
 });
 
 const client = (token = null) => {
