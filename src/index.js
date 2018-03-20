@@ -5,6 +5,7 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import { CookiesProvider } from 'react-cookie';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import authReducer from './store/reducers/auth';
@@ -17,26 +18,18 @@ const rootReducer = combineReducers({
     meetingroom: meetingroomReducer
 })
 
-const logger = store => {
-    return next => {
-        // the main method "action"
-        return action => {
-            //the method you want to execute
-            console.log('[Middleware] Disaptching', action);
-            const result = next(action);
-            console.log('[Middleware] next state ', store.getState());
-            return result;
-        }
-    }
-};
+
+
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(rootReducer, composeEnhancers(
-    applyMiddleware(logger, thunk)
+    applyMiddleware(thunk)
 ));
 
 const app = (
     <BrowserRouter>
-        <App />
+        <CookiesProvider>
+            <App />
+        </CookiesProvider>
     </BrowserRouter>
 )
 

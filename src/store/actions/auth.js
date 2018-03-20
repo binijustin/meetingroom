@@ -4,7 +4,6 @@ import * as actionTypes from './actionTypes';
 // import axios from 'axios';
 import http from '../../axios/unauth';
 
-
 export const authStart = (username) => {
     return {
         type: actionTypes.AUTH_START,
@@ -12,7 +11,7 @@ export const authStart = (username) => {
     }
 }
 
-export const authSucces = (token) => {
+export const authSuccess = (token) => {
     return {
         type: actionTypes.AUTH_SUCCESS,
         token: token
@@ -48,32 +47,40 @@ export const login = (obj) => {
 export const loginUser = (un, pass) => { //simulate async calls
     return dispatch => {
         const request = http('');
-        dispatch(authStart(un))
+        dispatch(authStart(un));
+        let details = {};
         request.post('access/LoginUser', {
-
             loginname: un,
             password: pass,
             syscode: "MRS"
         })
             .then(response => {
                 const request = http(response.data.stringParam1);
-                console.log(response)
-                const details = response.data.objParam1;
+                details = response.data.objParam1;
                 if (response.data.status === 'SUCCESS') {
-                    dispatch(login(details))
                     return request.get('authenticate/start')
-                        .then(response => {
-                            console.log('verify', response);
-                            dispatch(authSucces(response.headers.token))
-                        });
                 }
                 else if (response.data.status === 'FAILURE') {
                     dispatch(authFail({ message: response.data.message }));
                 }
             })
+            .then(response => {
+                console.log(details);
+                dispatch(login(details))
+                dispatch(authSuccess(response.headers.token))
+            })
             .catch(error => {
                 console.log('error', error)
                 dispatch(authFail(error));
             });
+    }
+
+}
+
+
+
+export const logout = () => {
+    return {
+        type: actionTypes.AUTH_LOGOUT,
     }
 }

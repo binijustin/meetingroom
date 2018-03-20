@@ -25,19 +25,30 @@ class Auth extends Component {
     }
 
     inputChangedHandler = (event, identifier) => {
-        const controlForm = {
-            ...this.state.controls
-        }//get the keys shallow copy
-        const updateFromElement = { ...controlForm[identifier] };
-        updateFromElement.value = event.target.value;
-        updateFromElement.touched = true;
-        controlForm[identifier] = updateFromElement; // put the updated copy 
+        // const controlForm = {
+        //     ...this.state.controls
+        // }//get the keys shallow copy
+        // const updateFromElement = { ...controlForm[identifier] };
+        // updateFromElement.value = event.target.value;
+        // updateFromElement.touched = true;
+        // controlForm[identifier] = updateFromElement; // put the updated copy 
 
         // let formIsValid = true;
         // for (let inputIdentifier in updatedOrderForm) {
         //     formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
         // }
-        this.setState({ controls: controlForm }); //set state
+        //this.setState({ controls: controlForm }); //set state
+        const updatedControls = {
+            ...this.state.controls,
+            [identifier]: {
+                ...this.state.controls[identifier],
+                value: event.target.value,
+                touched: true
+            }
+        };
+
+
+        this.setState( { controls: updatedControls } );
     }
 
     onSubmit = (event) => {
@@ -47,6 +58,7 @@ class Auth extends Component {
     }
 
     render() {
+
         let view = (
             <Login
                 submit={this.onSubmit}
@@ -69,7 +81,7 @@ class Auth extends Component {
 
         let authRedirect = null;
         if (this.props.isAuthenticated) {
-            authRedirect = <Redirect to={this.props.authRedirectPath} />
+            authRedirect = <Redirect to="/dashboard" />
         }
 
         return (

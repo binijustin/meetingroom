@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-class MeetingRoom extends Component {
 
+class EventBuilder extends Component {
 
 
     render() {
         console.log(this.props);
         return (
-           <h1>MeetingRoom</h1>
+            <h1>Event Builder</h1>
         )
     }
 }
 
-export default MeetingRoom;
+export default EventBuilder;
