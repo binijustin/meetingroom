@@ -1,6 +1,7 @@
 export {
     loginUser,
     logout,
+    loginCookies
 }
 from './auth';
 export {

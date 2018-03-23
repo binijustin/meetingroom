@@ -3,4 +3,3 @@
 export const server = 'http://coreapi.fastlogistics.com.ph/api/';
 export const api = "http://coreapi.fastlogistics.com.ph/api/meetingroom/";    
 export const authType = 'Basic';
-

@@ -1,5 +1,6 @@
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../utility';
+import Cookies from 'universal-cookie';
 
 const initialState = {
     username: null,
@@ -15,15 +16,13 @@ const initialState = {
     error: null,
     token: null,
     loading: false,
-    authRedirectPath: '/home'
 }
 
 const reducer = (state = initialState, action) => {
 
     switch (action.type) {
         case actionTypes.AUTH_START: return updateObject(state, {
-            loading: true,
-            username: action.username
+            loading: true
         });
 
         case actionTypes.AUTH_SUCCESS: return updateObject(state, {
@@ -51,7 +50,25 @@ const reducer = (state = initialState, action) => {
             usertype: action.usertype
         });
 
-        case actionTypes.AUTH_LOGOUT: return updateObject(state, {
+        case actionTypes.AUTH_LOGIN_COOKIES: return updateObject(state, {
+            username: action.username,
+            firstname: action.firstname,
+            lastname: action.lastname,
+            middlename: action.middlename,
+            mobileno: action.mobileno,
+            userId: action.userId,
+            emplId: action.emplId,
+            emailaddress: action.emailaddress,
+            userrole: action.userrole,
+            usertype: action.usertype,
+            token: action.token
+        });
+
+        case actionTypes.AUTH_LOGOUT:
+        const cookies = new Cookies();
+        cookies.remove('tkn')
+        cookies.remove('_101')
+        return updateObject(state, {
             username: null,
             firstname: null,
             lastname: null,

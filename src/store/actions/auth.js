@@ -3,11 +3,11 @@ import * as actionTypes from './actionTypes';
 // import forauth from '../../axios/forauth';
 // import axios from 'axios';
 import http from '../../axios/unauth';
+import Cookies from 'universal-cookie';
 
 export const authStart = (username) => {
     return {
-        type: actionTypes.AUTH_START,
-        username: username
+        type: actionTypes.AUTH_START
     }
 }
 
@@ -29,7 +29,23 @@ export const authFail = (error) => {
 
 
 export const login = (obj) => {
-    console.log(obj)
+    const cookies = new Cookies();
+    cookies.set('_101',
+        JSON.stringify({
+            username: obj.username,
+            firstname: obj.firstname,
+            lastname: obj.lastname,
+            middlename: obj.middlename,
+            mobileno: obj.mobileno,
+            userId: obj.userId,
+            emplId: obj.emplId,
+            emailaddress: obj.emailaddress,
+            userrole: obj.userrole,
+            usertype: obj.usertype,
+            token: obj.token,
+        })
+        , { path: '/' });
+
     return {
         type: actionTypes.AUTH_LOGIN,
         firstname: obj.firstname,
@@ -44,8 +60,27 @@ export const login = (obj) => {
     }
 }
 
+export const loginCookies = (obj,tkn) => {
+    return {
+        type: actionTypes.AUTH_LOGIN_COOKIES,
+        firstname: obj.firstname,
+        lastname: obj.lastname,
+        middlename: obj.middlename,
+        mobileno: obj.mobileno,
+        userId: obj.userId,
+        emplId: obj.emplId,
+        emailaddress: obj.emailaddress,
+        userrole: obj.userrole,
+        usertype: obj.usertype,
+        token: tkn
+    }
+}
+
+
 export const loginUser = (un, pass) => { //simulate async calls
     return dispatch => {
+
+
         const request = http('');
         dispatch(authStart(un));
         let details = {};
@@ -65,9 +100,12 @@ export const loginUser = (un, pass) => { //simulate async calls
                 }
             })
             .then(response => {
-                console.log(details);
-                dispatch(login(details))
-                dispatch(authSuccess(response.headers.token))
+                if(response) {
+                    dispatch(login(details))
+                    const cookies = new Cookies();
+                    cookies.set('tkn', response.headers.token, { path: '/' });
+                    dispatch(authSuccess(response.headers.token))
+                }
             })
             .catch(error => {
                 console.log('error', error)

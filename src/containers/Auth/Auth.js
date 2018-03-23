@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
 import * as actionCreators from '../../store/actions/index';
 //import {authStart}  from '../../store/actions/actionTypes'; 
 import Login from '../../components/Login/Login';
@@ -8,6 +9,13 @@ import Aux from '../../hoc/Auxiliary/Auxiliary';
 import { Redirect } from 'react-router-dom';
 
 class Auth extends Component {
+
+    componentDidUpdate() {
+        if (this.props.isAuthenticated) {
+            this.props.history.push('/dashboard');
+        }
+    }
+
     state = {
         controls: {
             password: {
@@ -24,20 +32,10 @@ class Auth extends Component {
 
     }
 
-    inputChangedHandler = (event, identifier) => {
-        // const controlForm = {
-        //     ...this.state.controls
-        // }//get the keys shallow copy
-        // const updateFromElement = { ...controlForm[identifier] };
-        // updateFromElement.value = event.target.value;
-        // updateFromElement.touched = true;
-        // controlForm[identifier] = updateFromElement; // put the updated copy 
 
-        // let formIsValid = true;
-        // for (let inputIdentifier in updatedOrderForm) {
-        //     formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
-        // }
-        //this.setState({ controls: controlForm }); //set state
+
+
+    inputChangedHandler = (event, identifier) => {
         const updatedControls = {
             ...this.state.controls,
             [identifier]: {
@@ -48,7 +46,7 @@ class Auth extends Component {
         };
 
 
-        this.setState( { controls: updatedControls } );
+        this.setState({ controls: updatedControls });
     }
 
     onSubmit = (event) => {
@@ -56,6 +54,7 @@ class Auth extends Component {
         console.log(this.state);
         this.props.onAuth(this.state.controls.username.value, this.state.controls.password.value);
     }
+
 
     render() {
 
@@ -79,14 +78,10 @@ class Auth extends Component {
             );
         }
 
-        let authRedirect = null;
-        if (this.props.isAuthenticated) {
-            authRedirect = <Redirect to="/dashboard" />
-        }
+
 
         return (
             <Aux>
-                {authRedirect}
                 {errorMessage}
                 {view}
             </Aux>
@@ -97,12 +92,22 @@ class Auth extends Component {
 //configuration which kind of infomation we need
 const mapStateToProps = state => {
     return {
-        token: state.auth.token,
-        username: state.auth.username,
         isAuthenticated: state.auth.token !== null,
         error: state.auth.error,
-        authRedirectPath: state.auth.authRedirectPath,
-        loading: state.auth.loading
+        loading: state.auth.loading,
+
+
+        username: state.auth.username,
+        firstname: state.auth.firstname,
+        lastname: state.auth.lastname,
+        middlename: state.auth.middlename,
+        mobileno: state.auth.mobileno,
+        userId: state.auth.userId,
+        emplId: state.auth.emplId,
+        emailaddress: state.auth.emailaddress,
+        userrole: state.auth.userrole,
+        usertype: state.auth.usertype,
+        token: state.auth.token,
     };
 }
 
@@ -113,4 +118,4 @@ const mapDispatchToProps = dispatch => {
 
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(Auth)

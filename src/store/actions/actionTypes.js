@@ -1,5 +1,6 @@
 //Auth
 export const AUTH_LOGIN = 'AUTH_LOGIN';
+export const AUTH_LOGIN_COOKIES = 'AUTH_LOGIN_COOKIES';
 export const AUTH_LOGOUT = 'AUTH_LOGOUT';
 export const AUTH_START = 'AUTH_START';
 export const AUTH_SUCCESS = 'AUTH_SUCCESS';

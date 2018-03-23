@@ -1,47 +1,80 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './App.css';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
+import Cookies from 'universal-cookie';
+
+import * as actionCreators from './store/actions/index';
+
 import Auth from './containers/Auth/Auth';
 import Layout from './hoc/Layout/Layout';
 import MeetingRoom from './containers/MeetingRoom/MeetingRoom';
 import EventBuilder from './containers/EventBuilder/EventBuilder';
+import Logout from './containers/Auth/Logout/Logout';
+
 
 class App extends Component {
-  state = {
-    auth: false
+
+
+  componentWillMount() {
+    console.log("will mount");
+    const cookies = new Cookies();
+    var _101 = cookies.get('_101');
+    var tkn = cookies.get('tkn');
+
+    if (_101 && tkn) {
+      this.props.loginCookies(_101, tkn);
+    }
   }
 
+
+
   render() {
-    console.log(this.props.isAuthenticated);
 
     let routes = (
       <Switch>
         {/* <Route path="/roomlist" component={Auth} /> */}
         <Route path="/" exact component={Auth} />
-        <Redirect to="/" />
       </Switch>
     );
 
     if (this.props.isAuthenticated) {
       routes = (
+        
+        <Layout>
         <Switch>
-          <Route path="/dashboard" component={MeetingRoom} />
-          <Route path="/manage-event" component={EventBuilder} />
-          <Route path="/logout" component={Logout} />
-          <Route path="/" exact component={BurgerBuilder} />
-          <Redirect to="/" />
+            <Route path="/" exact component={MeetingRoom} />
+            <Route path="/manage-event" component={EventBuilder} />
+            <Route path="/logout" component={Logout} />
+            <Route  render={() => <p>q</p>} />
+      
         </Switch>
+        </Layout>
       );
     }
+
+
 
     return (
       <div className="App">
         {routes}
+
+        {/* <Switch>
+          <Route path="/" exact component={Auth} />
+          <Layout>
+            <Route path="/dashboard" component={MeetingRoom} />
+            <Route path="/manage-event" component={EventBuilder} />
+            <Route path="/logout" component={Logout} />
+
+          </Layout>
+        </Switch> */}
+
       </div>
     );
   }
 }
+
+
 
 const mapStateToProps = state => {
   return {
@@ -49,4 +82,12 @@ const mapStateToProps = state => {
   };
 }
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => {
+  return {
+    loginCookies: (_101, tkn) => dispatch(actionCreators.loginCookies(_101, tkn))
+  };
+
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+
